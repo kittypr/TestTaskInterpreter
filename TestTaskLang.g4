@@ -2,7 +2,7 @@ grammar TestTaskLang;
 
 
 program
- : fundeflist expr
+ : fundeflist expr | expr
  ;
 
 fundeflist
