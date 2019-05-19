@@ -1,7 +1,33 @@
 grammar TestTaskLang;
 
 
+PROGRAM
+ : FUNDEFLIST EXPR
+ ;
 
+FUNDEFLIST
+ : FUNDEF EOL | FUNDEF EOL FUNDEFLIST
+ ;
+
+FUNDEF
+ : IDENTIFIER '(' PARAMLIST ')' '={' EXPR '}'
+ ;
+
+PARAMLIST
+ : IDENTIFIER | IDENTIFIER ',' IDENTIFIER
+ ;
+
+EXPR
+ : IDENTIFIER | CONSTEXPR | BINEXPR | IFEXPR | CALLEXPR
+ ;
+
+IFEXPR
+ : '[' EXPR ']?(' EXPR '):(' EXPR ')'
+ ;
+
+CALLEXPR
+ : IDENTIFIER '(' ARGLIST ')'
+ ;
 
 ARGLIST
  : EXPR | EXPR ',' ARGLIST
@@ -33,4 +59,8 @@ DIGIT
 
 CHARACTER
  : [a-zA-Z_]
+ ;
+
+EOL
+ : '\n'
  ;
