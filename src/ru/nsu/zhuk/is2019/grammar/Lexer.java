@@ -16,7 +16,7 @@ public class Lexer {
         currentChar = reader.read();
     }
 
-    public Lexeme getLexeme() throws IOException {
+    Lexeme getLexeme() throws IOException {
         Lexeme tmp;
         switch (currentChar) {
             case '+':
