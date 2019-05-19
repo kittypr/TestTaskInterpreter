@@ -13,7 +13,7 @@ public class Parser {
     }
 
     public int calculate() throws IOException {
-        int result = parseBinExpr();
+        int result = parseExpr();
         if (currentLexeme.getType() == LexemeType.EOF){
             return result;
         } else {
@@ -21,33 +21,45 @@ public class Parser {
         }
     }
 
-    private int parseBinExpr() throws IOException {
-        if (currentLexeme.getType() == LexemeType.MINUS || currentLexeme.getType() == LexemeType.NUMBER){
+    private int parseExpr() throws IOException{
+        LexemeType curType = currentLexeme.getType();
+        if (curType == LexemeType.OPEN_PAREN){
+            return parseBinExpr();
+        }
+        if (curType == LexemeType.MINUS || curType == LexemeType.NUMBER){
             return parseConstExpr();
         }
+        if (curType == LexemeType.OPEN_BRACKET){
+            return parseIfExpr();
+        }
+        throw new IOException();
+    }
 
-        if (currentLexeme.getType() == LexemeType.LEFT_PAREN){
+    private int parseIfExpr(){return 0;}
+
+    private int parseBinExpr() throws IOException {
+        if (currentLexeme.getType() == LexemeType.OPEN_PAREN){
             currentLexeme = lexer.getLexeme();
-            int exprRes = parseBinExpr();
+            int exprRes = parseExpr();
             switch (currentLexeme.getType()){
                 case PLUS:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes + parseBinExpr();
+                    exprRes = exprRes + parseExpr();
                     break;
                 case MINUS:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes - parseBinExpr();
+                    exprRes = exprRes - parseExpr();
                     break;
                 case ASTERISK:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes * parseBinExpr();
+                    exprRes = exprRes * parseExpr();
                     break;
                 case DIV:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes / parseBinExpr();
+                    exprRes = exprRes / parseExpr();
                     break;
             }
-            if (currentLexeme.getType() == LexemeType.RIGHT_PAREN){
+            if (currentLexeme.getType() == LexemeType.CLOSE_PAREN){
                 currentLexeme = lexer.getLexeme();
                 return exprRes;
             }
@@ -68,5 +80,6 @@ public class Parser {
         }
         else throw new IOException();
     }
+
 }
 

@@ -36,11 +36,27 @@ public class Lexer {
                 readChar();
                 break;
             case '(':
-                tmp = new Lexeme(LexemeType.LEFT_PAREN, "(");
+                tmp = new Lexeme(LexemeType.OPEN_PAREN, "(");
                 readChar();
                 break;
             case ')':
-                tmp = new Lexeme(LexemeType.RIGHT_PAREN, ")");
+                tmp = new Lexeme(LexemeType.CLOSE_PAREN, ")");
+                readChar();
+                break;
+            case '[':
+                tmp = new Lexeme(LexemeType.OPEN_BRACKET, "(");
+                readChar();
+                break;
+            case ']':
+                tmp = new Lexeme(LexemeType.CLOSE_BRACKET, ")");
+                readChar();
+                break;
+            case '{':
+                tmp = new Lexeme(LexemeType.OPEN_BRACE, "(");
+                readChar();
+                break;
+            case '}':
+                tmp = new Lexeme(LexemeType.CLOSE_BRACE, ")");
                 readChar();
                 break;
             case -1:
