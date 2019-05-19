@@ -1,57 +1,79 @@
 grammar TestTaskLang;
 
 
-PROGRAM
- : FUNDEFLIST EXPR
+program
+ : fundeflist expr
  ;
 
-FUNDEFLIST
- : FUNDEF EOL | FUNDEF EOL FUNDEFLIST
+fundeflist
+ : fundef EOL | fundef EOL fundeflist
  ;
 
-FUNDEF
- : IDENTIFIER '(' PARAMLIST ')' '={' EXPR '}'
+fundef
+ : identifier OPAR paramlist CPAR ASSIGN OBRACE expr CBRACE
  ;
 
-PARAMLIST
- : IDENTIFIER | IDENTIFIER ',' IDENTIFIER
+paramlist
+ : identifier | identifier COMMA identifier
  ;
 
-EXPR
- : IDENTIFIER | CONSTEXPR | BINEXPR | IFEXPR | CALLEXPR
+expr
+ : identifier | constexpr | binexpr | ifexpr | callexpr
  ;
 
-IFEXPR
- : '[' EXPR ']?(' EXPR '):(' EXPR ')'
+ifexpr
+ : OBRACK expr THEN expr ELSE expr CPAR
  ;
 
-CALLEXPR
- : IDENTIFIER '(' ARGLIST ')'
+callexpr
+ : identifier OPAR arglist CPAR
  ;
 
-ARGLIST
- : EXPR | EXPR ',' ARGLIST
+arglist
+ : expr | expr COMMA arglist
  ;
 
-BINEXPR
- : '(' EXPR OPERATION EXPR ')'
+binexpr
+ : OPAR expr operation expr CPAR
  ;
 
-CONSTEXPR
- : '-' NUMBER | NUMBER
+constexpr
+ : MINUS number | number
  ;
 
-OPERATION
- : '+' | '-' | '*' | '/' | '%' | '>' | '<' | '='
+
+identifier
+ : CHARACTER | CHARACTER identifier
  ;
 
-IDENTIFIER
- : CHARACTER | CHARACTER IDENTIFIER
+number
+ : DIGIT | DIGIT number
  ;
 
-NUMBER
- : DIGIT | DIGIT NUMBER
+operation
+ : PLUS | MINUS | MULT | DIV | MOD | GT | LT | ASSIGN
  ;
+
+
+GT : '>';
+LT : '<';
+PLUS : '+';
+MINUS : '-';
+MULT : '*';
+DIV : '/';
+MOD : '%';
+
+
+COMMA : ',';
+ASSIGN : '=';
+OPAR : '(';
+CPAR : ')';
+OBRACE : '{';
+CBRACE : '}';
+OBRACK : '[';
+THEN : ']?(';
+ELSE : '):(';
+
 
 DIGIT
  : [0-9]
@@ -62,5 +84,5 @@ CHARACTER
  ;
 
 EOL
- : '\n'
+ : [\n]
  ;
