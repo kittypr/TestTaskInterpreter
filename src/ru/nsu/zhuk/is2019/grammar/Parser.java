@@ -2,6 +2,8 @@ package ru.nsu.zhuk.is2019.grammar;
 
 import java.io.IOException;
 
+import ru.nsu.zhuk.is2019.exceptions.SyntaxErrorException;
+
 
 public class Parser {
     private Lexer lexer;
@@ -14,27 +16,22 @@ public class Parser {
 
     public int calculate() throws IOException, IllegalArgumentException {
         int result = parseExpr();
+        currentLexeme = lexer.getLexeme();
         if (currentLexeme.getType() == LexemeType.EOF){
             return result;
         } else {
-            throw new IOException("Syntax error.");
+            throw new SyntaxErrorException();
         }
     }
 
     private int parseExpr() throws IOException, IllegalArgumentException{
         LexemeType curType = currentLexeme.getType();
         if (curType == LexemeType.OPEN_PAREN){
-            int result = parseBinExpr();
-            currentLexeme = lexer.getLexeme();
-            return result;
+            return parseBinExpr();
         } else if (curType == LexemeType.MINUS || curType == LexemeType.NUMBER){
-            int result = parseConstExpr();
-            currentLexeme = lexer.getLexeme();
-            return result;
+            return parseConstExpr();
         } else if (curType == LexemeType.OPEN_BRACKET){
-            int result = parseIfExpr();
-            currentLexeme = lexer.getLexeme();
-            return result;
+            return parseIfExpr();
         }
         throw new IOException();
     }
@@ -68,7 +65,7 @@ public class Parser {
                 return exprRes;
             }
         }
-        throw new IOException();
+        throw new SyntaxErrorException();
     }
 
     private int parseConstExpr() throws IOException, IllegalArgumentException {
@@ -82,7 +79,7 @@ public class Parser {
             currentLexeme = lexer.getLexeme();
             return result;
         }
-        else throw new IOException();
+        else throw new IllegalArgumentException();
     }
 
 }
