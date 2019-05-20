@@ -40,19 +40,31 @@ public class Parser {
     private int parseIfExpr() throws IOException, SyntaxErrorException{
         if (currentLexeme.getType() == LexemeType.OPEN_BRACKET){
             currentLexeme = lexer.getLexeme();
-            int exprRes = parseExpr();
+            int ifRes = parseExpr();
 
             // read "]?("
-            currentLexeme = lexer.getLexeme();
             if (currentLexeme.getType() != LexemeType.CLOSE_BRACKET) throw new SyntaxErrorException();
             currentLexeme = lexer.getLexeme();
             if (currentLexeme.getType() != LexemeType.QMARK) throw new SyntaxErrorException();
             currentLexeme = lexer.getLexeme();
             if (currentLexeme.getType() != LexemeType.OPEN_PAREN) throw new SyntaxErrorException();
             currentLexeme = lexer.getLexeme();
-            if (exprRes >= 1) {
-                exprRes = parseExpr();
-            }
+            int thenRes = parseExpr();
+
+
+            if (currentLexeme.getType() != LexemeType.CLOSE_PAREN) throw new SyntaxErrorException();
+            currentLexeme = lexer.getLexeme();
+            if (currentLexeme.getType() != LexemeType.COLON) throw new SyntaxErrorException();
+            currentLexeme = lexer.getLexeme();
+            if (currentLexeme.getType() != LexemeType.OPEN_PAREN) throw new SyntaxErrorException();
+            currentLexeme = lexer.getLexeme();
+            int elseRes = parseExpr();
+
+
+            if (currentLexeme.getType() != LexemeType.CLOSE_PAREN) throw new SyntaxErrorException();
+            currentLexeme = lexer.getLexeme();
+
+            return ifRes >=1 ? thenRes : elseRes;
         }
         throw new SyntaxErrorException();
     }
@@ -99,6 +111,4 @@ public class Parser {
             return result;
         } else throw new IllegalArgumentException();
     }
-
 }
-
