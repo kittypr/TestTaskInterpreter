@@ -61,12 +61,20 @@ public class Lexer {
                 tmp = new Lexeme(LexemeType.CLOSE_BRACE, ")");
                 readChar();
                 break;
-            case -1:
-                tmp = new Lexeme(LexemeType.EOF, null);
+            case ':':
+                tmp = new Lexeme(LexemeType.COLON, ":");
+                readChar();
+                break;
+            case '?':
+                tmp = new Lexeme(LexemeType.QMARK, "?");
+                readChar();
                 break;
             case '\n':
                 tmp = new Lexeme(LexemeType.EOL, null);
                 readChar();
+                break;
+            case -1:
+                tmp = new Lexeme(LexemeType.EOF, null);
                 break;
             case '0':
             case '1':
