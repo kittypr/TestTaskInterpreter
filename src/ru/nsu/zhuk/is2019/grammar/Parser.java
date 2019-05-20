@@ -36,7 +36,26 @@ public class Parser {
         throw new IOException();
     }
 
-    private int parseIfExpr(){return 0;}
+    // <if-expression> ::= "[" <expression> "]?(" <expression> "):("<expression>")"
+    private int parseIfExpr() throws IOException, SyntaxErrorException{
+        if (currentLexeme.getType() == LexemeType.OPEN_BRACKET){
+            currentLexeme = lexer.getLexeme();
+            int exprRes = parseExpr();
+
+            // read "]?("
+            currentLexeme = lexer.getLexeme();
+            if (currentLexeme.getType() != LexemeType.CLOSE_BRACKET) throw new SyntaxErrorException();
+            currentLexeme = lexer.getLexeme();
+            if (currentLexeme.getType() != LexemeType.QMARK) throw new SyntaxErrorException();
+            currentLexeme = lexer.getLexeme();
+            if (currentLexeme.getType() != LexemeType.OPEN_PAREN) throw new SyntaxErrorException();
+            currentLexeme = lexer.getLexeme();
+            if (exprRes >= 1) {
+                exprRes = parseExpr();
+            }
+        }
+        throw new SyntaxErrorException();
+    }
 
     private int parseBinExpr() throws IOException, IllegalArgumentException {
         if (currentLexeme.getType() == LexemeType.OPEN_PAREN){
@@ -78,8 +97,7 @@ public class Parser {
             int result = sign * Integer.parseInt(currentLexeme.getLexemeText());
             currentLexeme = lexer.getLexeme();
             return result;
-        }
-        else throw new IllegalArgumentException();
+        } else throw new IllegalArgumentException();
     }
 
 }
