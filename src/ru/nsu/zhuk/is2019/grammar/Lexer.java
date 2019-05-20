@@ -37,6 +37,10 @@ public class Lexer {
                 tmp = new Lexeme(LexemeType.DIV, "/");
                 readChar();
                 break;
+            case '%':
+                tmp = new Lexeme(LexemeType.MOD, "/");
+                readChar();
+                break;
             case '(':
                 tmp = new Lexeme(LexemeType.OPEN_PAREN, "(");
                 readChar();

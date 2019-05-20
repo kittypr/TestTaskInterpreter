@@ -36,7 +36,6 @@ public class Parser {
         throw new IOException();
     }
 
-    // <if-expression> ::= "[" <expression> "]?(" <expression> "):("<expression>")"
     private int parseIfExpr() throws IOException, SyntaxErrorException{
         if (currentLexeme.getType() == LexemeType.OPEN_BRACKET){
             currentLexeme = lexer.getLexeme();
@@ -89,6 +88,10 @@ public class Parser {
                 case DIV:
                     currentLexeme = lexer.getLexeme();
                     exprRes = exprRes / parseExpr();
+                    break;
+                case MOD:
+                    currentLexeme = lexer.getLexeme();
+                    exprRes = exprRes % parseExpr();
                     break;
             }
             if (currentLexeme.getType() == LexemeType.CLOSE_PAREN){
