@@ -49,6 +49,10 @@ public class Lexer {
                 tmp = new Lexeme(LexemeType.LTR, "<");
                 readChar();
                 break;
+            case '=':
+                tmp = new Lexeme(LexemeType.EQ, "=");
+                readChar();
+                break;
             case '(':
                 tmp = new Lexeme(LexemeType.OPEN_PAREN, "(");
                 readChar();
@@ -82,7 +86,7 @@ public class Lexer {
                 readChar();
                 break;
             case '\n':
-                tmp = new Lexeme(LexemeType.EOL, null);
+                tmp = new Lexeme(LexemeType.EOL, "\n");
                 readChar();
                 break;
             case -1:
