@@ -3,6 +3,8 @@ package ru.nsu.zhuk.is2019.grammar;
 import java.io.IOException;
 import java.io.Reader;
 
+import ru.nsu.zhuk.is2019.exceptions.SyntaxErrorException;
+
 public class Lexer {
     private Reader reader;
     private int currentChar;
@@ -16,7 +18,7 @@ public class Lexer {
         currentChar = reader.read();
     }
 
-    Lexeme getLexeme() throws IOException {
+    Lexeme getLexeme() throws SyntaxErrorException, IOException {
         Lexeme tmp;
         switch (currentChar) {
             case '+':
@@ -64,6 +66,7 @@ public class Lexer {
                 break;
             case '\n':
                 tmp = new Lexeme(LexemeType.EOL, null);
+                readChar();
                 break;
             case '0':
             case '1':
@@ -85,7 +88,7 @@ public class Lexer {
                 tmp = new Lexeme(LexemeType.NUMBER, builder.toString());
                 break;
             default:
-                throw new IOException("Error: forbidden char: " + (char)currentChar);
+                throw new SyntaxErrorException();
         }
         return tmp;
     }

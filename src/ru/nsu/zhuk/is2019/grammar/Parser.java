@@ -7,12 +7,12 @@ public class Parser {
     private Lexer lexer;
     private Lexeme currentLexeme;
 
-    public Parser(Lexer lexer) throws IOException {
+    public Parser(Lexer lexer) throws IOException, IllegalArgumentException {
         this.lexer = lexer;
         currentLexeme = lexer.getLexeme();
     }
 
-    public int calculate() throws IOException {
+    public int calculate() throws IOException, IllegalArgumentException {
         int result = parseExpr();
         if (currentLexeme.getType() == LexemeType.EOF){
             return result;
@@ -21,23 +21,27 @@ public class Parser {
         }
     }
 
-    private int parseExpr() throws IOException{
+    private int parseExpr() throws IOException, IllegalArgumentException{
         LexemeType curType = currentLexeme.getType();
         if (curType == LexemeType.OPEN_PAREN){
-            return parseBinExpr();
-        }
-        if (curType == LexemeType.MINUS || curType == LexemeType.NUMBER){
-            return parseConstExpr();
-        }
-        if (curType == LexemeType.OPEN_BRACKET){
-            return parseIfExpr();
+            int result = parseBinExpr();
+            currentLexeme = lexer.getLexeme();
+            return result;
+        } else if (curType == LexemeType.MINUS || curType == LexemeType.NUMBER){
+            int result = parseConstExpr();
+            currentLexeme = lexer.getLexeme();
+            return result;
+        } else if (curType == LexemeType.OPEN_BRACKET){
+            int result = parseIfExpr();
+            currentLexeme = lexer.getLexeme();
+            return result;
         }
         throw new IOException();
     }
 
     private int parseIfExpr(){return 0;}
 
-    private int parseBinExpr() throws IOException {
+    private int parseBinExpr() throws IOException, IllegalArgumentException {
         if (currentLexeme.getType() == LexemeType.OPEN_PAREN){
             currentLexeme = lexer.getLexeme();
             int exprRes = parseExpr();
@@ -67,7 +71,7 @@ public class Parser {
         throw new IOException();
     }
 
-    private int parseConstExpr() throws IOException {
+    private int parseConstExpr() throws IOException, IllegalArgumentException {
         int sign = 1;
         if (currentLexeme.getType() == LexemeType.MINUS) {
             currentLexeme = lexer.getLexeme();

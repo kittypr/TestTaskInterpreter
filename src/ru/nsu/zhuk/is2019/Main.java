@@ -14,7 +14,10 @@ public class Main {
             Parser parser = new Parser(new Lexer(in));
             return String.valueOf(parser.calculate());
         } catch (IOException err){
+            err.printStackTrace();
             return "ERROR";
+        } catch (IllegalArgumentException err){
+            return err.getMessage();
         }
 
     }
