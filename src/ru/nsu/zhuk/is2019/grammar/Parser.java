@@ -25,6 +25,10 @@ public class Parser {
         }
     }
 
+    //<expression> ::=
+    //              | <binary-expression>
+    //              | <constant-expression>
+    //              | <if-expression>
     private int parseExpr() throws IOException, IllegalArgumentException{
         LexemeType curType = currentLexeme.getType();
         if (curType == LexemeType.OPEN_PAREN){
@@ -37,7 +41,8 @@ public class Parser {
         throw new SyntaxErrorException();
     }
 
-    private int parseIfExpr() throws IOException, SyntaxErrorException{
+    //<if-expression> ::= "[" <expression> "]?(" <expression> "):("<expression>")"
+    private int parseIfExpr() throws IOException, IllegalArgumentException{
         if (currentLexeme.getType() == LexemeType.OPEN_BRACKET){ // checking correct start of if-expression
             currentLexeme = lexer.getLexeme();
             int ifRes = parseExpr();
@@ -85,6 +90,7 @@ public class Parser {
         throw new SyntaxErrorException();
     }
 
+    //<binary-expression> ::= "(" <expression> <operation> <expression>  ")"
     private int parseBinExpr() throws IOException, IllegalArgumentException {
         int divider;
         boolean runtimeError = false;
@@ -145,6 +151,7 @@ public class Parser {
         throw new SyntaxErrorException();
     }
 
+    //<constant-expression> ::= "-" <number> | <number>
     private int parseConstExpr() throws IOException, IllegalArgumentException {
         int sign = 1;
         if (currentLexeme.getType() == LexemeType.MINUS) {

@@ -62,7 +62,7 @@ class MainTest {
     }
 
     @Test
-    void soComplexEvenICanNotCalculateThisTest(){
+    void ifExpressionTest(){
         assertEquals("0", Main.calculate(
                 new StringReader("[((10+20)>(20+10))]?{1}:{0}")));
         assertEquals("50", Main.calculate(
