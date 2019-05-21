@@ -63,6 +63,8 @@ class MainTest {
 
     @Test
     void soComplexEvenICanNotCalculateThisTest(){
+        assertEquals("0", Main.calculate(
+                new StringReader("[((10+20)>(20+10))]?{1}:{0}")));
         assertEquals("50", Main.calculate(
                 new StringReader("[((5+4)=([(15/5)]?{1}:{7}))]?{17}:{(200%150)}")));
         assertEquals("-51", Main.calculate(
