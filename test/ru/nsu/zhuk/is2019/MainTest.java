@@ -62,7 +62,7 @@ class MainTest {
     }
 
     @Test
-    void soComplexEvenICanNotCalculateThis(){
+    void soComplexEvenICanNotCalculateThisTest(){
         assertEquals("50", Main.calculate(
                 new StringReader("[((5+4)=([(15/5)]?{1}:{7}))]?{17}:{(200%150)}")));
         assertEquals("-51", Main.calculate(
@@ -79,6 +79,5 @@ class MainTest {
         assertEquals("RUNTIME ERROR", Main.calculate(new StringReader("(5/(3=60))")));
         assertEquals("2", Main.calculate(new StringReader("[0]?{(5/0)}:{2}")));
         assertEquals("RUNTIME ERROR", Main.calculate(new StringReader("[-5]?{(5/0)}:{2}")));
-
     }
 }
