@@ -77,6 +77,8 @@ class MainTest {
     void runtimeErrorTest(){
         assertEquals("RUNTIME ERROR", Main.calculate(new StringReader("(5/0)")));
         assertEquals("RUNTIME ERROR", Main.calculate(new StringReader("(5/(3=60))")));
-        assertEquals("RUNTIME ERROR", Main.calculate(new StringReader("[0]?{(5/0)}:{2}")));
+        assertEquals("2", Main.calculate(new StringReader("[0]?{(5/0)}:{2}")));
+        assertEquals("RUNTIME ERROR", Main.calculate(new StringReader("[-5]?{(5/0)}:{2}")));
+
     }
 }

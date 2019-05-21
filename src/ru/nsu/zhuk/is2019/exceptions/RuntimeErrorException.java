@@ -19,6 +19,6 @@ public class RuntimeErrorException extends IllegalArgumentException{
     }
 
     public String getErrorExpression(){
-        return expression + " : " + String.valueOf(line);
+        return expression + ":" + String.valueOf(line);
     }
 }

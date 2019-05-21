@@ -87,6 +87,7 @@ public class Parser {
 
     private int parseBinExpr() throws IOException, IllegalArgumentException {
         int divider;
+        boolean runtimeError = false;
         if (currentLexeme.getType() == LexemeType.OPEN_PAREN){// checking correct start of bin-expression
             currentLexeme = lexer.getLexeme();
             int exprRes = parseExpr();
@@ -106,14 +107,21 @@ public class Parser {
                 case DIV:
                     currentLexeme = lexer.getLexeme();
                     divider =  parseExpr();
-                    if (divider == 0) throw new RuntimeErrorException();
-                    exprRes = exprRes / divider;
+                    if (divider == 0) {
+                        runtimeError = true; // only indicating RunTime Exception for continuation of syntax checking
+                    } else {
+                        exprRes = exprRes / divider;
+                    }
                     break;
                 case MOD:
                     currentLexeme = lexer.getLexeme();
                     divider =  parseExpr();
-                    if (divider == 0) throw new RuntimeErrorException();
-                    exprRes = exprRes % divider;
+                    if (divider == 0) {
+                        runtimeError = true; // only indicating RunTime Exception for continuation of syntax checking
+                    }
+                    else {
+                        exprRes = exprRes % divider;
+                    }
                     break;
                 case GRT:
                     currentLexeme = lexer.getLexeme();
@@ -130,6 +138,7 @@ public class Parser {
             }
             if (currentLexeme.getType() == LexemeType.CLOSE_PAREN){// checking correct end of bin-expression
                 currentLexeme = lexer.getLexeme();
+                if (runtimeError) throw new RuntimeErrorException();
                 return exprRes;
             }
         }
