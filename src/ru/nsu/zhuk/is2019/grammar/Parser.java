@@ -3,6 +3,7 @@ package ru.nsu.zhuk.is2019.grammar;
 import java.io.IOException;
 
 import ru.nsu.zhuk.is2019.exceptions.SyntaxErrorException;
+import ru.nsu.zhuk.is2019.exceptions.RuntimeErrorException;
 
 
 public class Parser {
@@ -33,7 +34,7 @@ public class Parser {
         } else if (curType == LexemeType.OPEN_BRACKET){
             return parseIfExpr();
         }
-        throw new IOException();
+        throw new SyntaxErrorException();
     }
 
     private int parseIfExpr() throws IOException, SyntaxErrorException{
@@ -49,7 +50,14 @@ public class Parser {
             if (currentLexeme.getType() != LexemeType.OPEN_BRACE) throw new SyntaxErrorException();
             currentLexeme = lexer.getLexeme();
 
-            int thenRes = parseExpr();
+
+            // calculating both of if-expression branches in case of syntax error
+            int thenRes = 0;
+            try{
+                thenRes = parseExpr();
+            } catch (RuntimeErrorException err){ // ignoring runtime errors if we don't use the result of this branch
+                if (ifRes != 0) throw err;
+            }
 
             // reading "}:{"
             if (currentLexeme.getType() != LexemeType.CLOSE_BRACE) throw new SyntaxErrorException();
@@ -59,7 +67,14 @@ public class Parser {
             if (currentLexeme.getType() != LexemeType.OPEN_BRACE) throw new SyntaxErrorException();
             currentLexeme = lexer.getLexeme();
 
-            int elseRes = parseExpr();
+
+            // calculating both of if-expression branches in case of syntax error
+            int elseRes = 0;
+            try {
+                elseRes = parseExpr();
+            } catch (RuntimeErrorException err){ // ignoring runtime errors if we don't use the result of this branch
+                if (ifRes == 0) throw err;
+            }
 
             // checking correct end of if-expression
             if (currentLexeme.getType() != LexemeType.CLOSE_BRACE) throw new SyntaxErrorException();
@@ -71,7 +86,8 @@ public class Parser {
     }
 
     private int parseBinExpr() throws IOException, IllegalArgumentException {
-        if (currentLexeme.getType() == LexemeType.OPEN_PAREN){
+        int divider;
+        if (currentLexeme.getType() == LexemeType.OPEN_PAREN){// checking correct start of bin-expression
             currentLexeme = lexer.getLexeme();
             int exprRes = parseExpr();
             switch (currentLexeme.getType()){
@@ -89,11 +105,15 @@ public class Parser {
                     break;
                 case DIV:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes / parseExpr();
+                    divider =  parseExpr();
+                    if (divider == 0) throw new RuntimeErrorException();
+                    exprRes = exprRes / divider;
                     break;
                 case MOD:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes % parseExpr();
+                    divider =  parseExpr();
+                    if (divider == 0) throw new RuntimeErrorException();
+                    exprRes = exprRes % divider;
                     break;
                 case GRT:
                     currentLexeme = lexer.getLexeme();
@@ -108,7 +128,7 @@ public class Parser {
                     exprRes = exprRes == parseExpr() ? 1 : 0;
                     break;
             }
-            if (currentLexeme.getType() == LexemeType.CLOSE_PAREN){
+            if (currentLexeme.getType() == LexemeType.CLOSE_PAREN){// checking correct end of bin-expression
                 currentLexeme = lexer.getLexeme();
                 return exprRes;
             }
@@ -126,6 +146,6 @@ public class Parser {
             int result = sign * Integer.parseInt(currentLexeme.getLexemeText());
             currentLexeme = lexer.getLexeme();
             return result;
-        } else throw new IllegalArgumentException();
+        } else throw new SyntaxErrorException();
     }
 }

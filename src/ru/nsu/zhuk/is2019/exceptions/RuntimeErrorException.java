@@ -1,6 +1,8 @@
 package ru.nsu.zhuk.is2019.exceptions;
 
-public class RuntimeErrorException extends ArithmeticException{
+
+
+public class RuntimeErrorException extends IllegalArgumentException{
 
     static final private String MESSAGE = "RUNTIME ERROR";
 
