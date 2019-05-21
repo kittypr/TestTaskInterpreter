@@ -65,7 +65,7 @@ public class Parser {
             if (currentLexeme.getType() != LexemeType.CLOSE_BRACE) throw new SyntaxErrorException();
             currentLexeme = lexer.getLexeme();
 
-            return ifRes >= 1 ? thenRes : elseRes;
+            return ifRes != 0 ? thenRes : elseRes;
         }
         throw new SyntaxErrorException();
     }
