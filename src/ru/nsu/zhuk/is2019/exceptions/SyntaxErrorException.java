@@ -2,9 +2,9 @@ package ru.nsu.zhuk.is2019.exceptions;
 
 public class SyntaxErrorException extends IllegalArgumentException {
 
-    static final String message = "SYNTAX ERROR";
+    static private final String MESSAGE = "SYNTAX ERROR";
 
     public SyntaxErrorException(){
-        super(message);
+        super(MESSAGE);
     }
 }

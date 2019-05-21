@@ -97,15 +97,15 @@ public class Parser {
                     break;
                 case GRT:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes > parseIfExpr() ? 1 : 0;
+                    exprRes = exprRes > parseExpr() ? 1 : 0;
                     break;
                 case LTR:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes < parseIfExpr() ? 1 : 0;
+                    exprRes = exprRes < parseExpr() ? 1 : 0;
                     break;
                 case EQ:
                     currentLexeme = lexer.getLexeme();
-                    exprRes = exprRes == parseIfExpr() ? 1 : 0;
+                    exprRes = exprRes == parseExpr() ? 1 : 0;
                     break;
             }
             if (currentLexeme.getType() == LexemeType.CLOSE_PAREN){
